@@ -94,4 +94,4 @@ text:str = "aa"
 
 # LICENSE
 
-See [LICENSE].
+See [LICENSE](LICENSE).
