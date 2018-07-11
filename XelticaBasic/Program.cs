@@ -2,15 +2,25 @@
 
 namespace XelticaBasic
 {
-	class Program
+	class XBSample
 	{
 		static void Main(string[] args)
 		{
 		}
 	}
 
-	public class Parser
+	public class XBParser
+	{
+		public XBNode Parse(string code)
+		{
+			
+		}
+	}
+
+	public class XBNode
 	{
 		
 	}
+
+
 }

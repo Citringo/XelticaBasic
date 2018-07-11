@@ -7,89 +7,227 @@ XelticaBasic is an implementation of the BASIC language.
 ```bas
 
 ' Hello World
-print "Hello, world!"
+PRINT "Hello, world!"
 
 ' Expression
-a = 3 + 5
-b = 3 + 4
-c = a + b
+A = 3 + 5
+B = 3 + 4
+C = a + b
 
 ' Combine string
-s$ = a + " + " + b + " = " + c
-print s$
+S$ = A + " + " + B + " = " + C
+PRINT S$
 
 ' Input
-t = val(scan("数値> "))
+T = VAL(SCAN("数値> "))
 
 ' Inline If
-if t < 5 then ?"tは5未満です" else ?"tは5以上です"
+IF T < 5 THEN ?"Tは5未満です" ELSE ?"Tは5以上です"
 
 ' Block Style If
-if t < 6 then
-	?"tは6未満"
-elseif t < 10 then
-	?"tは6以上10未満"
-else
-	?"tは10以上"
-endif
+IF T < 6 THEN
+	?"Tは6未満"
+ELSEIF T < 10 THEN
+	?"Tは6以上10未満"
+ELSE
+	?"Tは10以上"
+ENDIF
 
 ' Switch
-switch t
-	case 0
-		?"tは0"
-	case 1
-		?"tは1"
-	case 2
-		?"tは2"
-	case 3
-		?"tは3"
-	default
-		?"tは0, 1, 2, 3以外"
-endswitch
-
+SWITCH T
+	CASE 0
+		?"Tは0"
+	CASE 1
+		?"Tは1"
+	CASE 2
+		?"Tは2"
+	CASE 3
+		?"Tは3"
+	DEFAULT
+		?"Tは0, 1, 2, 3以外
+END
 ' Define a func
+DEF SAYSAYSAY TEXT$
+	'for statement
+	FOR I = 0 TO 10
+		?TEXT$
+	NEXT
+END
 
-def saysaysay text$
-
-'for statement
-	for i = 0 to 10
-		?text$
-	next
-
-end
-
-saysaysay "ピザ"
+SAYSAYSAY "ピザ"
 
 ' Define an array
-dim arr[10]
-for i = 0 to 9
-	arr[i] = (i + 4)  % 10
-next
+VAR ARR[10]
+FOR I = 0 TO 9
+	ARR[I] = (I + 4)  % 10
+NEXT
 
 ' Define an array 2
-arr2 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+ARR2 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 ' Define a struct
-struct vec2
-	var x
-	var y
-end
+STRUCT VEC2
+	VAR X
+	VAR Y
+END
 
 ' Use a struct variable
 
-dim v:vec2
-v.x = 10
-v.y = 20
+VAR V:VEC2
+V.X = 10
+V.Y = 20
 
-// syntax sugar
-v2:vec2 = [10, 20]
+' syntax sugar
+V2:VEC2 = [10, 20]
 
-// Both these are same
-value = 3
-value:num = 3
+' Both these are same
+VALUE = 3
+VALUE:NUM = 3
 
-text$ = "aa"
-text:str = "aa"
+VALUE$ = "aa"
+VALUE:STRING = "aa"
+
+' while
+I = 0
+WHILE I < 50
+	?I
+	' inclement
+	INC I
+WEND
+
+' Use a function
+
+F = SIN(100)
+
+' define a class
+
+' + public
+' - private
+' * internal
+' ~ protected
+
+CLASS +MYCLASS
+	' Field
+	VAR -_A
+	VAR -_B$
+
+	' Properties
+	PROP +A
+		GET
+			RETURN _A
+		SET
+			_A = VALUE
+	END
+
+	PROP +B$
+		GET
+			RETURN _B$
+		-SET
+			IF VALUE != "yes" && VALUE != "no" THEN
+				THROW INIT EXCEPTION("A wrong value!")
+			ENDIF
+			
+			_B$ = VALUE
+	end
+
+	' Auto Property
+	PROP +C GETSET
+
+	' constructor
+	INIT(A, B$, C)
+		MY.A = A
+		MY.B$ = B$
+		MY.C = C
+	END
+
+	' member operation
+	DEF +SHOW
+		?B$
+	END
+
+	' member function
+	DEF +PLUS()
+		 RETURN A + C
+	END
+
+	DEF +MINUS()
+		 RETURN A - C
+	END
+
+	DEF +MULTIPLY()
+		 RETURN A * C
+	END
+	
+	DEF +DIVIDE()
+		 RETURN A / C
+	END
+END
+
+' instantiate my class
+VAR OBJ = INIT MYCLASS(3, "yes", 2)
+
+' call a member function
+?OBJ.PLUS()
+?OBJ.MINUS()
+?OBJ.MULTIPLY()
+?OBJ.DIVIDE()
+
+' call a member operation
+OBJ.SHOW
+
+' exception handling
+TRY
+	' inline initialize
+	?(INIT MYCLASS(3, "aaksasa", 2).PLUS())
+CATCH EX
+	?EX.MESSAGE
+end
+
+' define a group (same as namespace) named "sample"
+GROUP SAMPLE
+	CLASS +TEST
+		+PROP A GETSET
+		+PROP B GETSET
+		INIT(A, B)
+			MY.A = A : MY.B = B
+		RNF
+
+		+MOD()
+			RETURN a % b
+		END
+	END
+END
+
+' initialize in-group class without 'use' statement
+?INIT SAMPLE.TEST(7, 5).MOD()
+
+' use a namespace
+USE SAMPLE
+?INIT TEST(5, 3).MOD()
+
+' use a standard library
+USE STD.COLLECTIONS
+
+VAR A = INIT TEST()
+A.ADD 44
+A.ADD 55
+
+?A[0]
+?A[1]
+
+VAR B = INIT LIST$()
+B.ADD "hage"
+B.ADD "neko"
+B.ADD "inu"
+B.REMOVE 1
+
+?B[1]
+
+' generic class
+USE STD.COLLECTIONS.GENERIC
+VAR C = INIT LIST:TEST()
+C.ADD INIT TEST(5, 2)
+C.ADD INIT TEST(8, 2)
 ```
 
 # LICENSE
